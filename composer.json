@@ -1,0 +1,15 @@
+{
+    "name": "laracraftcms/core",
+    "description": "",
+    "authors": [
+        {
+            "name": "Greg Haddow",
+            "email": "greg@greghaddow.co.uk"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Laracraft\\Core\\": ""
+        }
+    }
+}
