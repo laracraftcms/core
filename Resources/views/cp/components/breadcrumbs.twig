@@ -1,0 +1,11 @@
+{% if breadcrumbs %}
+	<ol itemscope="itemscope" itemtype="http://schema.org/BreadcrumbList" class="breadcrumb">
+		{% for breadcrumb in breadcrumbs %}
+		{% if breadcrumb.url and not breadcrumb.last %}
+			<li class="breadcrumb-item" itemprop="itemListElement" itemscope="itemscope" itemtype="http://schema.org/ListItem"><a itemprop="item" href="{{ breadcrumb.url }}">{{ breadcrumb.title }}</a></li>
+		{% else %}
+			<li itemprop="itemListElement" itemscope="itemscope" itemtype="http://schema.org/ListItem" class="breadcrumb-item active">{{ breadcrumb.title }}</li>
+		{% endif %}
+		{% endfor %}
+	</ol>
+{% endif %}

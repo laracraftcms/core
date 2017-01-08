@@ -1,0 +1,15 @@
+{% extends 'core::cp.configure.field_group.form' %}
+
+{% block sidebar_after %}
+	{% if field_group.fields|length > 0 %}
+		<div id="fields">
+			<h3>{{ 'core::entity.field_group.fields.fields.heading'|trans }}</h3>
+
+			<div class="list-group">
+				{% for field in field_group.fields %}
+					<a class="list-group-item" href="{{ route(config('laracraft-core.cp_root')~'.configure.field.edit',field) }}">{{ field.name }}</a>
+				{% endfor %}
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}

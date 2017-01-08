@@ -1,0 +1,14 @@
+{% extends 'core::cp.configure.section.form' %}
+
+{% block sidebar_after %}
+    <h4>{{ trans_choice('core::entity.entry_type.label',0) }}: <small><a class="btn btn-link" href="{{ route(config('laracraft-core.cp_root')~'.configure.section.entry_type.index',section) }}">{{ 'core::forms.manage'|trans }}</a></small></h4>
+    {% if section.entryTypes|length > 0 %}
+    <div class="list-group">
+        {% for type in section.entryTypes %}
+            <a class="list-group-item" href="{{ route(config('laracraft-core.cp_root')~'.configure.entry_type.edit',type) }}">{{ type.name }}</a>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="text-xs-center text-muted"><small>{{ 'core::entity.entry_type.none_to_remove'|trans }}</small></p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'core::layouts.cp' %}
+
+{% block header_pagennav %}
+	<nav class="navbar navbar-light">
+		<ul class="nav navbar-nav float-xs-right">
+			<li class="nav-item">
+				<a href="{{ route(config('laracraft-core.cp_root')~'.configure.field_layout.create') }}" class="btn btn-success">{{ 'core::entity.field_layout.create'|trans }}</a>
+			</li>
+		</ul>
+	</nav>
+{% endblock %}
+
+{% block main %}
+<table id="field_layouts" class="table table-striped">
+    <thead>
+    <tr>
+        <th>{{ 'core::entity.field_layout.fields.name.heading'|trans }}</th>
+        <th>{{ 'core::entity.field_layout.fields.tabs.count'|trans }}</th>
+        <th>{{ 'core::entity.field.count'|trans }}</th>
+        <th>{{ 'core::entity.entry_type.heading'|trans }}</th>
+    </tr>
+    </thead>
+    <tbody>
+	{% if field_layouts|length == 0 %}
+	<tr class="empty_row">
+		<td colspan="4" class="empty text-xs-center">{{ 'core::entity.field_layout.empty'|trans }}</td>
+	</tr>
+	{% else %}
+    {% for field_layout in field_layouts %}
+        <tr>
+            <td>
+            {% if not field_layout.isLocked() %}
+                <a href="{{ route(config('laracraft-core.cp_root')~'.configure.field_layout.edit',[field_layout]) }}">{{ field_layout.name }}</a>
+            {% else %}
+                {{ field_layout.name }} <span class="label label-pill label-warning">{{ trans('core::forms.locked',{'name':field_layout.editLock.createdBy}) }}</span>
+            {% endif %}
+            </td>
+            <td>{{ field_layout.fieldLayoutTabCount }}</td>
+            <td>{{ field_layout.fieldCount }}</td>
+            <td>
+                {% if field_layout.entryTypes|length > 0 %}
+
+					<div class="btn-group">
+						<a href="{{ route(config('laracraft-core.cp_root')~'.configure.section.index') }}" class="btn btn-link">{{ field_layout.entryTypes|length }}  {{ 'core::entity.entry_type.label'|trans_choice(field_layout.entryTypes|length) }}</a>
+						<button type="button" class="btn btn-link dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="sr-only">{{ trans('core::forms.edit_single',{ 'entity' : trans_choice('core::entity.field_layout.label',1)} ) }}</span>
+						</button>
+						<div class="dropdown-menu dropdown-menu-right">
+							{% for type in field_layout.entryTypes %}
+								<a href="{{ route(config('laracraft-core.cp_root')~'.configure.entry_type.edit',section) }}" class="dropdown-item">{{ type.name }}</a>
+							{% endfor %}
+						</div>
+					</div>
+                {% else %}
+					<em class="unassigned text-muted">{{ 'core::forms.unassigned'|trans }}</em>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+	{% endif %}
+    </tbody>
+</table>
+{% endblock %}

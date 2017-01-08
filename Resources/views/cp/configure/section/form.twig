@@ -1,0 +1,140 @@
+{% extends 'core::layouts.cp' %}
+{% set _sidebar_after = block('sidebar_after') %}
+{% block body %}
+   <form method="POST" action="{{ route(config('laracraft-core.cp_root')~'.configure.section.' ~ (section.exists ? 'update' : 'store'),section) }}">
+    {% embed 'core::layouts.partials.sidebar-right' %}
+        {% block main %}
+       <fieldset class="form-group">
+           <label for="name" class="required">{{ 'core::entity.section.fields.name.label'|trans }}</label>
+           <input id="name" type="text" name="name" class="form-control" value="{{ input_old('name',section.name) }}" required>
+           <small class="text-muted">{{ 'core::entity.section.fields.name.help'|trans }}</small>
+       </fieldset>
+       <fieldset class="form-group">
+           <label for="handle" class="required">{{ 'core::entity.section.fields.handle.label'|trans }}</label>
+           <input id="handle" type="text" name="handle" class="form-control" value="{{ input_old('handle',section.handle) }}" required>
+           <small class="text-muted">{{ 'core::entity.section.fields.handle.help'|trans }}</small>
+       </fieldset>
+       <fieldset class="form-group">
+           <label for="type" class="required">{{ 'core::entity.section.fields.type.label'|trans }}</label>
+           <select id="type" name="type" class="form-control custom-select" required>
+               <option value=""{{ section.exists ? ' disabled' : ''}}>{{ 'core::entity.section.fields.type.placeholder'|trans }}</option>
+               {% for type, label in section.getTypes() %}
+               <option value="{{ type }}"{{ type == input_old('type',section.type) ? ' selected' : '' }}>{{ label }}</option>
+               {% endfor %}
+           </select>
+           <small class="text-muted">{{ 'core::entity.section.fields.type.help'|trans }}</small>
+       </fieldset>
+       <div class="fieldset-single collapse{{ input_old('type',section.type)=='single' ? ' in' : '' }}">
+		   <fieldset class="form-group">
+			   <label for="single_has_urls" class="custom-control custom-checkbox">
+				   <input id="single_has_urls" class="custom-control-input" type="checkbox" name="single_has_urls" value="1"{{ input_old('single_has_urls',section.has_urls)==false ? '' : ' checked="checked"' }}>
+				   <span class="custom-control-indicator"></span>
+				   <span class="custom-control-description">{{ 'core::entity.section.fields.has_urls.label.single'|trans }}</span>
+			   </label>
+		   </fieldset>
+		   <div id="has_urls-fields-single" class="collapse{{ input_old('single_has_urls',section.has_urls)==true ? ' in' : '' }}">
+			   <fieldset class="form-group">
+				   <label for="single_url_format">{{ 'core::entity.section.fields.url_format.label.single'|trans }}</label>
+				   <input id="single_url_format" type="text" name="single_url_format" class="form-control" value="{{ input_old('single_url_format',section.url_format) }}">
+				   <small class="text-muted">{{ 'core::entity.section.fields.url_format.help.single'|trans }}</small>
+			   </fieldset>
+			   <fieldset class="form-group">
+				   <label for="single_view">{{ 'core::entity.section.fields.view.label.single'|trans }}</label>
+				   <input id="single_view" type="text" name="single_view" class="form-control" value="{{ input_old('single_view',section.view) }}">
+				   <small class="text-muted">{{ 'core::entity.section.fields.view.help.single'|trans }}</small>
+			   </fieldset>
+		   </div>
+       </div>
+       <div class="fieldset-channel collapse{{ input_old('type',section.type)=='channel' ? ' in' : '' }}">
+		   <fieldset class="form-group">
+			   <label for="channel_has_urls" class="custom-control custom-checkbox">
+				   <input id="channel_has_urls" class="custom-control-input" type="checkbox" name="channel_has_urls" value="1"{{ input_old('channel_has_urls',section.has_urls)==true ? ' checked="checked"' : '' }}>
+				   <span class="custom-control-indicator"></span>
+				   <span class="custom-control-description">{{ 'core::entity.section.fields.has_urls.label.channel'|trans }}</span>
+			   </label>
+		   </fieldset>
+		   <div id="has_urls-fields-channel" class="collapse{{ input_old('channel_has_urls',section.has_urls)==true ? ' in' : '' }}">
+			   <fieldset class="form-group">
+				   <label for="channel_url_format" class="required">{{ 'core::entity.section.fields.url_format.label.channel'|trans }}</label>
+				   <input id="channel_url_format" type="text" name="channel_url_format" class="form-control" value="{{ input_old('channel_url_format',section.url_format) }}">
+				   <small class="text-muted">{{ 'core::entity.section.fields.url_format.help.channel'|trans }}</small>
+			   </fieldset>
+			   <fieldset class="form-group">
+				   <label for="channel_view">{{ 'core::entity.section.fields.view.label.channel'|trans }}</label>
+				   <input id="channel_view" type="text" name="channel_view" class="form-control" value="{{ input_old('channel_view',section.view) }}">
+				   <small class="text-muted">{{ 'core::entity.section.fields.view.help.channel'|trans }}</small>
+			   </fieldset>
+		   </div>
+       </div>
+       <div class="fieldset-structure collapse{{ input_old('type',section.type)=='structure' ? ' in' : '' }}">
+		   <fieldset class="form-group">
+			   <label for="structure_has_urls" class="custom-control custom-checkbox">
+				   <input id="structure_has_urls" class="custom-control-input" type="checkbox" name="structure_has_urls" value="1"{{ input_old('structure_has_urls',section.has_urls)==true ? ' checked="checked"' : '' }}>
+				   <span class="custom-control-indicator"></span>
+				   <span class="custom-control-description">{{ 'core::entity.section.fields.has_urls.label.structure'|trans }}</span>
+			   </label>
+		   </fieldset>
+		   <div id="has_urls-fields-structure" class="collapse{{ input_old('structure_has_urls',section.has_urls)==true ? ' in' : '' }}">
+			   <fieldset class="form-group">
+				   <label for="structure_url_format" class="required">{{ 'core::entity.section.fields.url_format.label.structure'|trans }}</label>
+				   <input id="structure_url_format" type="text" name="structure_url_format" class="form-control" value="{{ input_old('structure_url_format',section.url_format) }}">
+				   <small class="text-muted">{{ 'core::entity.section.fields.url_format.help.structure'|trans }}</small>
+			   </fieldset>
+			   <fieldset class="form-group">
+				   <label for="structure_nested_url_format" class="required">{{ 'core::entity.section.fields.nested_url_format.label'|trans }}</label>
+				   <input id="structure_nested_url_format" type="text" name="structure_nested_url_format" class="form-control" value="{{ input_old('structure_nested_url_format',section.nested_url_format) }}">
+				   <small class="text-muted">{{ 'core::entity.section.fields.nested_url_format.help'|trans }}</small>
+			   </fieldset>
+			   <fieldset class="form-group">
+				   <label for="structure_view">{{ 'core::entity.section.fields.view.label.structure'|trans }}</label>
+				   <input id="structure_view" type="text" name="structure_view" class="form-control" value="{{ input_old('structure_view',section.view) }}">
+				   <small class="text-muted">{{ 'core::entity.section.fields.view.help.structure'|trans }}</small>
+			   </fieldset>
+		   </div>
+           <fieldset class="form-group">
+               <label for="structure_max_levels">{{ 'core::entity.section.fields.max_levels.label'|trans }}</label>
+               <input id="structure_max_levels" type="number" min="0" name="structure_max_levels" class="form-control" value="{{ input_old('structure_max_levels',section.max_levels) }}">
+			   <small class="text-muted">{{ 'core::entity.section.fields.max_levels.help'|trans }}</small>
+		   </fieldset>
+       </div>
+	   <fieldset class="form-group">
+		   <input type="hidden" name="default_enabled" value="0">
+		   {{ 'core::entity.section.fields.default_enabled.label'|trans }} <input name="default_enabled" id="default_enabled" type="checkbox" data-toggle="toggle" value="1" {{ input_old('default_enabled',section.default_enabled) == true ? 'checked="checked"' : '' }}>
+	   </fieldset>
+       <fieldset class="form-group">
+           <label for="has_versions" class="custom-control custom-checkbox">
+               <input type="hidden" name="has_versions" value="0">
+               <input id="has_versions" class="custom-control-input" type="checkbox" name="has_versions" value="1"{{ input_old('has_versions',section.has_versions)==true ? ' checked="checked"' : '' }}>
+               <span class="custom-control-indicator"></span>
+               <span class="custom-control-description">{{ 'core::entity.section.fields.has_versions.label'|trans }}</span>
+           </label>
+       </fieldset>
+       <fieldset>
+		   <input type="hidden" name="has_urls" value="0">
+           <input type="hidden" name="_method" value="{{ section.exists ? 'PATCH' : 'POST'}}">
+           <input type="hidden" name="_token" value="{{ csrf_token() }}">
+           <a href="{{ route(config('laracraft-core.cp_root')~'.configure.section.index')~(section.exists?"?and_release="~section.editLock.id : '')}}" class="btn btn-secondary">{{ 'core::forms.cancel'|trans }}</a>
+
+           <div class="btn-group pull-right">
+               <input type="submit" class="btn btn-primary" value="{{ ('core::forms.' ~ (section.exists ? 'update' : 'save'))|trans }}">
+               <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                   <span class="sr-only">{{ ('core::forms.' ~ (section.exists ? 'update' : 'save')~'_options')|trans }}</span>
+               </button>
+               <div class="dropdown-menu dropdown-menu-right">
+                   <input type="submit" class="dropdown-item" name="and_edit" value="{{ ('core::forms.' ~ (section.exists ? 'update' : 'save')~'_and_edit')|trans }}">
+               </div>
+           </div>
+       </fieldset>
+        {% endblock %}
+
+        {% block sidebar %}
+            <fieldset class="form-group">
+                <input type="hidden" name="enabled" value="0">
+                {{ 'core::entity.section.fields.enabled.label'|trans }} <input name="enabled" id="enabled" type="checkbox" data-toggle="toggle" value="1" {{ section.enabled == true ? 'checked="checked"' : '' }}>
+            </fieldset>
+            {{ _sidebar_after|raw }}
+        {% endblock %}
+        {% endembed %}
+   </form>
+{% endblock %}
+

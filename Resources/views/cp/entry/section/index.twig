@@ -1,0 +1,40 @@
+{% extends 'core::layouts/cp' %}
+
+{% block header_pageheader_title %}{{ trans(('core::routes.' ~ Route.currentRouteName ~'.title'), {'section': section.name })|raw }}{% endblock %}
+
+{% block main %}
+	<table id="entries" class="table table-striped{{ entries|length == 0 ? ' empty' :'' }}">
+		<thead>
+		<tr>
+			<th>{{ 'core::entity.entry.fields.title.heading'|trans }}</th>
+			<th>{{ 'core::entity.entry.fields.created_at.heading'|trans }}</th>
+			<th>{{ 'core::entity.entry.fields.url.heading'|trans }}</th>
+		</tr>
+		</thead>
+		<tbody>
+		{% if entries|length == 0 %}
+			<tr class="empty_row">
+				<td colspan="3" class="text-xs-center">{{ 'core::entity.entry.empty'|trans }}</td>
+			</tr>
+		{% else %}
+			{% for entry in entries %}
+				<tr>
+					<td>
+						{% if not entry.isLocked() %}
+							<a href="{{ route(config('laracraft-core.cp_root')~'.section.entry_type.entry.edit',[entry.section, entry.entryType, entry]) }}">{{ entry.title }}</a>
+						{% else %}
+							{{ entry.title }} <span class="tag tag-pill tag-warning">{{ trans('core::forms.locked',{'name':entry.editLock.createdBy}) }}</span>
+						{% endif %}
+					</td>
+					<td>{{ entry.created_at|date('d/m/Y H:i:s') }}</td>
+					<td>{% if entry.url is not empty %}<a class="btn btn-link btn-sm" href="{{ entry.url }}" target="_blank"><i class="fa fa-globe"></i></a>{% endif %}</td>
+				</tr>
+			{% endfor %}
+		{% endif %}
+		</tbody>
+		<tfoot>
+
+		</tfoot>
+	</table>
+
+{% endblock %}

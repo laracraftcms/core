@@ -1,0 +1,12 @@
+<fieldset class="form-group{{ errors.has('settings.default')?' has-danger':'' }}">
+	<input type="hidden" name="settings[default]" value="0">
+	<label for="settings[default]">{{ 'core::field_type.boolean.settings.default.label'|trans }}</label>
+	<br>
+	<input name="settings[default]" id="settings[default]" type="checkbox" data-toggle="toggle" value="1" {{ settings.default == true ? 'checked="checked"' : '' }}>
+	<div class="clearfix">
+		{% if errors.has('settings.default') %}
+			<div class="form-control-feedback">{{ errors.first('settings.default') }}</div>
+		{% endif %}
+		<small class="text-muted">{{ 'core::field_type.boolean.settings.default.help'|trans }}</small>
+	</div>
+</fieldset>

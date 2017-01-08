@@ -1,0 +1,43 @@
+<fieldset class="form-group{{ errors.has('settings.placeholder')?' has-danger':'' }}">
+    <label for="settings[placeholder]">{{ 'core::field_type.plaintext.settings.placeholder.label'|trans }}</label>
+    <input type="text" class="form-control" id="settings[placeholder]" name="settings[placeholder]" value="{{ input_old('settings.placeholder',settings.placeholder) }}">
+	{% if errors.has('settings.placeholder') %}
+	<div class="form-control-feedback">{{ errors.first('settings.placeholder') }}</div>
+	{% endif %}
+	<small class="text-muted">{{ 'core::field_type.plaintext.settings.placeholder.help'|trans }}</small>
+</fieldset>
+
+<fieldset class="form-group{{ errors.has('settings.max_length')?' has-danger':'' }}">
+	<label for="settings[max_length]">{{ 'core::field_type.plaintext.settings.max_length.label'|trans }} <small class="btn btn-link btn-sm" id="max_length_advanced">{{ 'core::forms.advanced'|trans }}</small></label>
+	<select class="form-control custom-select" id="settings[max_length]" name="settings[max_length]">
+		{% for size, value in text_sizes %}
+		<option value="{{ value }}"{{ input_old('settings[max_length]',settings.max_length) == value ? ' selected="selected"' : '' }}">{{ trans('core::field_type.plaintext.sizes.'~size) }}
+		{% endfor %}
+	</select>
+	<label for="settings[max_length]exact" hidden>{{ 'core::field_type.plaintext.settings.max_length.label'|trans }}  <small class="btn btn-link btn-sm" id="max_length_simple">{{ 'core::forms.simple'|trans }}</small></label>
+	<input type="number" class="form-control" id="settings[max_length]exact" name="settings[max_length]" value="{{ input_old('settings.max_length',settings.max_length) }}" min="{{ text_sizes|first }}" max="{{ text_sizes|last }}" placeholder="1...{{ text_sizes|last }}" hidden disabled>
+	{% if errors.has('settings.max_length') %}
+		<div class="form-control-feedback">{{ errors.first('settings.max_length') }}</div>
+	{% endif %}
+	<small class="text-muted">{{ 'core::field_type.plaintext.settings.max_length.help'|trans }}</small>
+</fieldset>
+
+<fieldset class="form-group{{ errors.has('settings.multiline.')?' has-danger':'' }}">
+	<input type="hidden" name="settings[multiline]" value="0">
+	<label for="settings[default]">{{ 'core::field_type.plaintext.settings.multiline.label'|trans }}</label>
+	<br>
+	<input name="settings[multiline]" id="settings[multiline]" type="checkbox" data-toggle="toggle" value="1" {{ input_old('settings.multiline',settings.multiline) ? 'checked="checked"' : '' }}>
+	{% if errors.has('settings.multiline') %}
+		<div class="form-control-feedback">{{ errors.first('settings.multiline') }}</div>
+	{% endif %}
+</fieldset>
+
+<fieldset class="form-group{{ errors.has('settings.initial_rows')?' has-danger':'' }} is-multiline">
+	<label for="settings[initial_rows]">{{ 'core::field_type.plaintext.settings.initial_rows.label'|trans }}</label>
+	<input type="number" class="form-control" id="settings[initial_rows]" min="1" name="settings[initial_rows]" value="{{ input_old('settings.initial_rows',(settings.initial_rows is empty ? 5 : settings.initial_rows)) }}">
+	{% if errors.has('settings.initial_rows') %}
+	<div class="form-control-feedback">{{ errors.first('settings.initial_rows') }}</div>
+	{% endif %}
+	<small class="text-muted">{{ 'core::field_type.plaintext.settings.initial_rows.help'|trans }}</small>
+
+</fieldset>

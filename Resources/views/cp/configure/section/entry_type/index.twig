@@ -1,0 +1,104 @@
+{% extends 'core::layouts.cp' %}
+
+{% block header_pageheader_title %}{{ trans(('core::routes.' ~ Route.currentRouteName ~'.title'), {'section': ('<a href="' ~ route( config('laracraft-core.cp_root') ~ '.configure.section.edit',section) ~ '">' ~ section.name ~ '</a>') })|raw }}{% endblock %}
+
+{% block header_pagennav %}
+	<nav class="navbar navbar-light">
+		<ul class="nav navbar-nav float-xs-right">
+			<li class="nav-item">
+				<a href="{{ route(config('laracraft-core.cp_root')~'.configure.entry_type.create') }}" class="btn btn-success">{{ 'core::entity.entry_type.create'|trans }}</a>
+			</li>
+		</ul>
+	</nav>
+{% endblock %}
+
+{% block main %}
+    <form method="POST" action="{{ route(config('laracraft-core.cp_root')~'.configure.section.entry_type.update',section) }}">
+    <div class="row">
+        <div class="col-lg-6">
+            <h4>
+                {{ 'core::forms.assigned'|trans }}
+            </h4>
+            <table id="section_entry_types" class="table table-striped">
+                <thead>
+                    <tr>
+						<th></th>
+						<th>{{ 'core::entity.entry_type.fields.name.heading'|trans }}</th>
+						<th>{{ 'core::entity.entry_type.fields.handle.heading'|trans }}</th>
+						<th>{{ 'core::entity.field_layout.heading'|trans_choice(1) }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+					<tr class="empty_row" {{ section.entryTypes|length == 0 ? '' : 'hidden' }}>
+						<td colspan="4" class="text-xs-center">{{ 'core::entity.entry_type.none_to_remove'|trans }}</td>
+					</tr>
+                    {% for type in section.entryTypes %}
+                    <tr>
+						<td>
+							<span class="toggle-plus" hidden><span class="sr-only">{{ 'core::entity.entry_type.remove'|trans }}</span></span>
+							<span class="toggle-minus"><span class="sr-only">{{ 'core::entity.entry_type.remove'|trans }}</span></span>
+						</td>
+						<td>
+                            <input type="hidden" name="entry_types[]" value="{{ type.id }}">
+                            <a href="{{ route(config('laracraft-core.cp_root')~'.configure.entry_type.edit',[type]) }}">{{ type.name }}</a>
+                        </td>
+                        <td>{{ type.handle }}</td>
+                        <td><a href="{{ route(config('laracraft-core.cp_root')~'.configure.field_layout.edit',[type.fieldLayout]) }}">{{ type.fieldLayout.name }}</a></td>
+					</tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-6">
+            <h4>
+				{{ 'core::forms.available'|trans }}
+            </h4>
+            <table id="entry_types" class="table table-striped">
+                <thead>
+                <tr>
+					<th></th>
+					<th>{{ 'core::entity.entry_type.fields.name.heading'|trans }}</th>
+					<th>{{ 'core::entity.entry_type.fields.handle.heading'|trans }}</th>
+					<th>{{ 'core::entity.field_layout.heading'|trans_choice(1) }}</th>
+                </tr>
+                </thead>
+                <tbody>
+				<tr class="empty_row" {{ entry_types|length == 0 ? '' : 'hidden' }}>
+					<td colspan="4" class="text-xs-center">{{ 'core::entity.entry_type.none_to_add'|trans }}</td>
+				</tr>
+                {% for type in entry_types %}
+                    <tr>
+						<td>
+							<span class="toggle-plus"><span class="sr-only">{{ 'core::entity.entry_type.remove'|trans }}</span></span>
+							<span class="toggle-minus" hidden><span class="sr-only">{{ 'core::entity.entry_type.remove'|trans }}</span></span>
+						</td>
+						<td>
+                            <input type="hidden" name="entry_types[]" value="{{ type.id }}" disabled>
+                            <a href="{{ route(config('laracraft-core.cp_root')~'.configure.entry_type.edit',[type]) }}">{{ type.name }}</a>
+                        </td>
+                        <td>{{ type.handle }}</td>
+                        <td><a href="{{ route(config('laracraft-core.cp_root')~'.configure.field_layout.edit',[type.fieldLayout]) }}">{{ type.fieldLayout.name }}</a></td>
+                       </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <fieldset>
+        <input type="hidden" name="_method" value="PATCH">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <a href="{{ route(config('laracraft-core.cp_root')~'.configure.section.edit',section) }}" class="btn btn-secondary">{{ 'core::forms.cancel'|trans }}</a>
+
+        <div class="btn-group pull-right">
+            <input type="submit" class="btn btn-primary" value="{{ 'core::forms.update'|trans }}">
+            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="sr-only">{{ 'core::forms.update_options'|trans }}</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <input type="submit" class="dropdown-item" name="and_edit" value="{{ 'core::forms.update_and_edit'|trans }}">
+            </div>
+        </div>
+    </fieldset>
+
+    </form>
+{% endblock %}

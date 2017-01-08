@@ -1,0 +1,53 @@
+{% extends 'core::layouts.cp' %}
+
+{% block header_pagennav %}
+	{% if field_group.exists %}
+		<nav class="navbar navbar-light">
+			<ul class="nav navbar-nav float-xs-right">
+				<li class="nav-item">
+					<a class="btn btn-success pull-right" href="{{ route(config('laracraft-core.cp_root')~'.configure.field.create') ~ '?field_group_id=' ~ field_group.id }}">{{ 'core::entity.field.create'|trans }}</a>
+				</li>
+			</ul>
+		</nav>
+	{% endif %}
+{% endblock %}
+
+{% set _sidebar_after = block('sidebar_after') %}
+
+{% block body %}
+{% embed 'core::layouts.partials.sidebar-right' %}
+{% block main %}
+<form method="POST" action="{{ route(config('laracraft-core.cp_root')~'.configure.field_group.' ~ (field_group.exists ? 'update' : 'store'), field_group) }}">
+
+	<fieldset class="form-group">
+		<label for="name" class="required">{{ 'core::entity.field_group.fields.name.label'|trans }}</label>
+		<input id="name" type="text" name="name" class="form-control" value="{{ input_old('name',field_group.name) }}" required>
+		<small class="text-muted">{{ 'core::entity.field_group.fields.name.help'|trans }}</small>
+	</fieldset>
+	<fieldset class="form-group">
+		<label for="table_name" class="required">{{ 'core::entity.field_group.fields.table_name.label'|trans }}</label>
+		<input id="table_name" type="text" name="table_name" class="form-control" value="{{ input_old('table_name',field_group.table_name) }}" required>
+		<small class="text-muted">{{ 'core::entity.field_group.fields.table_name.help'|trans }}</small>
+	</fieldset>
+   <fieldset>
+       <input type="hidden" name="_method" value="{{ field_group.exists ? 'PATCH' : 'POST'}}">
+       <input type="hidden" name="_token" value="{{ csrf_token() }}">
+       <a href="{{ route(config('laracraft-core.cp_root')~'.configure.field_group.index')~"?and_release="~field_group.editLock.id }}" class="btn btn-secondary">{{ 'core::forms.cancel'|trans }}</a>
+
+	   <div class="btn-group pull-right">
+		   <input type="submit" class="btn btn-primary" value="{{ ('core::forms.' ~ (field_group.exists ? 'update' : 'save'))|trans }}">
+		   <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			   <span class="sr-only">{{ ('core::forms.' ~ (field_group.exists ? 'update' : 'save')~'_options')|trans }}</span>
+		   </button>
+		   <div class="dropdown-menu dropdown-menu-right">
+			   <input type="submit" class="dropdown-item" name="and_edit" value="{{ ('core::forms.' ~ (field_group.exists ? 'update' : 'save')~'_and_edit')|trans }}">
+		   </div>
+	   </div>
+   </fieldset>
+</form>
+{% endblock %}
+	{% block sidebar %}
+		{{ _sidebar_after|raw }}
+	{% endblock %}
+{% endembed %}
+{% endblock %}

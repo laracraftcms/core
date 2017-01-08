@@ -1,0 +1,39 @@
+<?php
+
+use Laracraft\Core\Database\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class {{class}} extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+    	$schema = app('db')->connection()->getSchemaBuilder();
+
+        $schema->blueprintResolver(function($table, $callback) {
+            return new Blueprint($table, $callback);
+        });
+
+        {{schema_up}}
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+    	$schema = app('db')->connection()->getSchemaBuilder();
+
+		$schema->blueprintResolver(function($table, $callback) {
+			return new Blueprint($table, $callback);
+		});
+
+        {{schema_down}}
+    }
+}

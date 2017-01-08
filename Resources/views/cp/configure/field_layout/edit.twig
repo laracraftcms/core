@@ -1,0 +1,12 @@
+{% extends 'core::cp.configure.field_layout.form' %}
+
+{% block sidebar_after %}
+    {% if layout.entryTypes|length > 0 %}
+    <h3>Used by:</h3>
+    <div class="list-group">
+        {% for type in layout.entryTypes %}
+            <a class="list-group-item" href="{{ route(config('laracraft-core.cp_root')~'.configure.entry_type.edit',type) }}">{{ type.name }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endblock %}

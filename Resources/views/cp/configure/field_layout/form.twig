@@ -1,0 +1,137 @@
+{% extends 'core::layouts.cp' %}
+{% set _sidebar_after = block('sidebar_after') %}
+{% block body %}
+    <form method="POST" action="{{ route(config('laracraft-core.cp_root')~'.configure.field_layout.' ~ (field_layout.exists ? 'update' : 'store'),field_layout) }}">
+    {% embed 'core::layouts.partials.sidebar-right' %}
+        {% block main %}
+       <fieldset class="form-group">
+           <label for="name" class="required">{{ 'core::entity.field_layout.fields.name.label'|trans }}</label>
+           <input id="name" type="text" name="name" class="form-control" value="{{ input_old('name',field_layout.name) }}" required>
+           <small class="text-muted">{{ 'core::entity.entry_type.fields.name.help'|trans }}</small>
+       </fieldset>
+		<fieldset class="form-group">
+			<label for="handle" class="required">{{ 'core::entity.field_layout.fields.handle.label'|trans }}</label>
+			<input id="handle" type="text" name="handle" class="form-control" value="{{ input_old('handle',field_layout.handle) }}" required>
+			<small class="text-muted">{{ 'core::entity.field_layout.fields.handle.help'|trans }}</small>
+		</fieldset>
+
+       <div id="layout">
+		   <h3>{{ 'core::entity.field_layout.layout'|trans }}</h3>
+           <div class="row layout-tabs">
+                {% for tab in field_layout.tabs %}
+                    <div data-tab-name="{{ tab.name }}" class="tab col-md-6 col-xl-4">
+                        <div class="card">
+                            <div class="card-header dropdown">
+                                <input class="tab-name-field" type="hidden" name="tabs[{{ tab.id }}]" value="{{ tab.name }}">
+                                <span class="tab-name">{{ tab.name }}</span>
+                                <span class="config-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i></span>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" data-toggle="rename">{{ 'core::entity.field_layout_tab.rename'|trans }}</a>
+                                    <a class="dropdown-item" data-toggle="delete">{{ 'core::entity.field_layout_tab.destroy'|trans }}</a>
+                                </div>
+                            </div>
+                            <ul class="tab-fields list-group list-group-flush">
+                            {% for field in tab.fields %}
+                                {{ debug(field) }}
+                                <li data-field-group="{{ groups.find(field.field_group_id).name }}" class="field list-group-item dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {% if field.pivot.name_override %}<div class="field_name_display_original">{{ 'core::forms.original'|trans }} {{ field.name }}</div>{% endif %}
+                                    <span class="field_name_display{{ field.pivot.required ?' required': '' }}">{{ field.pivot.name_override?field.pivot.name_override:field.name }}</span>
+                                    <span class="config-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i></span>
+                                    <input class="field_name" type="hidden" name="names[{{ field.id }}]" value="{{ field.pivot.name_override?field.pivot.name_override:field.name }}" data-original="{{ field.name }}">
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" data-toggle="required">{{ trans('core::forms.' ~ (field.pivot.required?'make_not_required':'make_required') ) }}</a>
+                                        <a class="dropdown-item" data-toggle="relabel">{{ 'core::entity.field.relabel'|trans }}</a>
+                                    </div>
+                                    <input class="field_id" type="hidden" name="layout[{{ tab.name }}][]" value="{{ field.id }}">
+                                    <input class="required_field" type="hidden" name="required[]" value="{{ field.id }}"{{ field.pivot.required ?'':' disabled' }}>
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endfor %}
+           </div>
+       </div>
+
+       <fieldset class="form-group">
+           <button id="addTab" class="btn btn-outline-primary"><i class="fa fa-plus"></i> New Tab</button> ... or use one of your field groups as a starting point:
+       </fieldset>
+       <fieldset class="form-group">
+           <input type="hidden" name="_method" value="{{ field_layout.exists ? 'PATCH' : 'POST'}}">
+           <input type="hidden" name="_token" value="{{ csrf_token() }}">
+           <a href="{{ route(config('laracraft-core.cp_root')~'.configure.field_layout.index')~"?and_release="~field_layout.editLock.id }}" class="btn btn-secondary">{{ 'core::forms.cancel'|trans }}</a>
+
+           <div class="btn-group pull-right">
+               <input type="submit" class="btn btn-primary" value="{{ ('core::forms.' ~ (field_layout.exists ? 'update' : 'save'))|trans }}">
+               <button type="button" class="btn btn-primary dropdown-toggle  dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                   <span class="sr-only">{{ ('core::forms.' ~ (field_layout.exists ? 'update' : 'save')~'_options')|trans }}</span>
+               </button>
+               <div class="dropdown-menu dropdown-menu-right">
+                   <input type="submit" class="dropdown-item" name="and_edit" value="{{ ('core::forms.' ~ (field_layout.exists ? 'update' : 'save')~'_and_edit')|trans }}">
+               </div>
+           </div>
+       </fieldset>
+
+		<div id="available_fields">
+			<a class="btn btn-link btn-sm pull-right" href="{{ route('laracraft.configure.field.index') }}">{{ ('core::routes.'~ config('laracraft-core.cp_root')~'.configure.field.index.title')|trans }}</a>
+			<h3>{{ 'core::entity.field.available'|trans }}</h3>
+			<div class="row field-groups">
+				{{ debug(groups) }}
+				{% for group in groups %}
+					<div data-tab-name="{{ group.name }}" class="tab group-tab col-md-6 col-xl-4" {{ group.fields is empty ? 'hidden' : '' }}>
+						<div class="card">
+							<div class="card-header dropdown">
+								<input class="tab-name-field" type="hidden" name="tabs[~~group~~{{ group.id }}]" value="{{ group.name }}" disabled>
+								<span class="tab-name">{{ group.name }}</span>
+								<span class="config-toggle" data-toggle="dropdown" hidden><i class="fa fa-cog"></i></span>
+								<div class="dropdown-menu dropdown-menu-right">
+									<a class="dropdown-item" data-toggle="rename">{{ 'core::entity.field_layout_tab.rename'|trans }}</a>
+									<a class="dropdown-item" data-toggle="delete">{{ 'core::entity.field_layout_tab.destroy'|trans }}</a>
+								</div>
+							</div>
+							<ul class="group-fields list-group list-group-flush">
+								{% for field in group.fields %}
+									<li data-field-group="{{ group.name }}" class="field list-group-item dropdown">
+										<span class="field_name_display">{{ field.name }}</span>
+										<span class="config-toggle" data-toggle="dropdown" hidden><i class="fa fa-cog"></i></span>
+										<input class="field_name" type="hidden" name="names[{{ field.id }}]" value="{{ field.name }}" data-original="{{ field.name }}" disabled>
+										<div class="dropdown-menu dropdown-menu-right">
+											<a class="dropdown-item" data-toggle="required">{{ trans('core::forms.make_required') }}</a>
+											<a class="dropdown-item" data-toggle="relabel">{{ 'core::entity.field.relabel'|trans }}</a>
+										</div>
+										<input class="field_id" type="hidden" name="layout[{{ group.name }}][]" value="{{ field.id }}" disabled>
+										<input class="required_field" type="hidden" name="required[]" value="{{ field.id }}" disabled>
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+		<div id="tabTemplate" data-count="{{ field_layout.tabs|length }}" hidden>
+			<div data-tab-name="" class="tab col-md-6 col-xl-4">
+				<div class="card">
+					<div class="card-header dropdown dropdown">
+						<input class="tab-name-field" type="hidden" name="tabs[]" value="" disabled>
+						<span class="tab-name"></span>
+						<span class="config-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i></span>
+						<div class="dropdown-menu dropdown-menu-right">
+							<a class="dropdown-item" data-toggle="rename">{{ 'core::entity.field_layout_tab.rename'|trans }}</a>
+							<a class="dropdown-item" data-toggle="delete">{{ 'core::entity.field_layout_tab.destroy'|trans }}</a>
+						</div>
+					</div>
+					<ul class="tab-fields list-group list-group-flush">
+					</ul>
+				</div>
+			</div>
+		</div>
+{% endblock %}
+
+{% block sidebar %}
+{{ _sidebar_after|raw }}
+{% endblock %}
+
+{% endembed %}
+</form>
+{% endblock %}

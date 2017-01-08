@@ -1,0 +1,89 @@
+{% extends 'core::layouts.cp' %}
+{% set _sidebar_after = block('sidebar_after') %}
+{% block body %}
+    <form method="POST" action="{{ route(config('laracraft-core.cp_root')~'.section.entry_type.entry.' ~ (entry.exists ? 'update' : 'store'),[section, entry_type, entry]) }}">
+        {% embed 'core::layouts.partials.sidebar-right' %}
+            {% block main %}
+				{{ debug(entry) }}
+                {% if entry_type.has_title_field %}
+                <fieldset class="form-group{{ errors.has('title') ? ' has-danger' : '' }}">
+                    <label class="required" for="title">{{ entry_type.title_config|length > 0 ? entry_type.title_config : trans('core::entity.entry.fields.title.label') }}</label>
+                    <input class="form-control" type="text" id="title" name="title" value="{{ input_old('title',entry.title) }}" required>
+                	{% if errors.has('title') %}<div class="form-control-feedback">{{ errors.first('title') }}</div>{% endif %}
+				</fieldset>
+				{% elseif (entry.exists) %}
+					<h2>{{ entry.title }}</h2>
+                {% endif %}
+                {%  if entry_type.fieldLayout.tabs|length > 1 %}
+                <ul class="nav nav-tabs" role="tablist">
+                    {% for tab in entry_type.fieldLayout.tabs %}
+                    <li class="nav-item">
+                        <a class="nav-link{{ loop.first?' active':'' }}" data-toggle="tab" href="#tab-{{ tab.id }}" role="tab">{{ tab.name }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="tab-content">
+                    {% for tab in entry_type.fieldLayout.tabs %}
+                    <div class="mt-1 px-1 tab-pane{{ loop.first?' active':'' }}" id="tab-{{ tab.id }}" role="tabpanel">
+                        {% for field in entry_type.fieldLayout.fields %}
+                            {% if field.pivot.field_layout_tab_id == tab.id %}
+                            {{ field.getInputHtml(field, attribute(entry,field.handle), entry.exists)|raw }}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    {% for field in (entry_type.fieldLayout.tabs|first).fields %}
+                        {{ field.getInputHtml(field, attribute(entry,field.handle), entry.exists)|raw }}
+                    {% endfor %}
+                {% endif %}
+
+				<fieldset class="form-group">
+					<input type="hidden" name="section_id" value="{{ section.id }}">
+					<input type="hidden" id="id" value="{{ entry.id }}" disabled>
+					<input type="hidden" id="section_handle" value="{{ section.handle }}" disabled>
+					<input type="hidden" name="_method" value="{{ entry.exists ? 'PATCH' : 'POST'}}">
+					<input type="hidden" name="_token" value="{{ csrf_token() }}">
+					<a href="{{ route(config('laracraft-core.cp_root')~'.configure.field_layout.index')~"?and_release="~field_layout.editLock.id }}" class="btn btn-secondary">{{ 'core::forms.cancel'|trans }}</a>
+
+					<div class="btn-group pull-right">
+						<input type="submit" class="btn btn-primary" value="{{ ('core::forms.' ~ (entry.exists ? 'update' : 'save'))|trans }}">
+						<button type="button" class="btn btn-primary dropdown-toggle  dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="sr-only">{{ ('core::forms.' ~ (entry.exists ? 'update' : 'save')~'_options')|trans }}</span>
+						</button>
+						<div class="dropdown-menu dropdown-menu-right">
+							<input type="submit" class="dropdown-item" name="and_edit" value="{{ ('core::forms.' ~ (entry.exists ? 'update' : 'save')~'_and_edit')|trans }}">
+						</div>
+					</div>
+				</fieldset>
+            {% endblock %}
+            {% block sidebar %}
+				<fieldset class="form-group">
+					<input type="hidden" value="{{ entry.entry_type_id }}" name="entry_type_id">
+					<label for="entry_type">{{ 'core::entity.entry_type.label'|trans_choice(1) }}</label>
+					<select id="entry_type" class="form-control custom-select">
+						{% for type in entry.section.entryTypes %}
+						<option value="{{ type.handle }}"{{ entry.entry_type_id == type.id ? ' selected="selected"' : '' }}>{{ type.name }}</option>
+						{% endfor %}
+					</select>
+					<small class="text-muted">{{ 'core::entity.entry_type.change'|trans }}</small>
+				</fieldset>
+				<fieldset class="form-group">
+					<input type="hidden" name="enabled" value="0">
+					{{ 'core::entity.entry.fields.enabled.label'|trans }} <input name="enabled" id="enabled" type="checkbox" data-toggle="toggle" value="1" {{ entry.enabled == true ? 'checked="checked"' : '' }}>
+				</fieldset>
+				<fieldset class="form-group">
+					<label for="published_at">{{ 'core::entity.entry.fields.published_at.label'|trans }} <i class="fa fa-question-circle text-info" data-toggle="tooltip" data-html="true" title="{{ 'core::entity.entry.fields.published_at.help'|trans|escape }}"></i></label>
+					<input type="datetime-local" class="form-control" name="published_at" id="published_at" value="{{ input_old('published_at',entry.published_at) }}">
+				</fieldset>
+				<fieldset class="form-group">
+					<label for="expired_at">{{ 'core::entity.entry.fields.expired_at.label'|trans }} <i class="fa fa-question-circle text-info" data-toggle="tooltip" data-html="true" title="{{ 'core::entity.entry.fields.expired_at.help'|trans|escape }}"></i></label>
+					<input type="datetime-local" class="form-control" name="expired_at" id="expired_at" value="{{ input_old('expired_at',entry.expired_at) }}">
+				</fieldset>
+				{{ _sidebar_after|raw }}
+            {% endblock %}
+        {% endembed %}
+    </form>
+{% endblock %}
+

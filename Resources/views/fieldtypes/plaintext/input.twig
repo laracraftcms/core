@@ -1,0 +1,14 @@
+<fieldset class="form-group{{ errors.has('field.' ~ handle) ? ' has-danger' : '' }}">
+    <label class="form-control-label" for="{{ name }}">{{ label }}</label>
+    {% if settings.multiline %}
+		<textarea class="form-control" id="{{ name }}" name="{{ name }}"{% if settings.placeholder and settings.placeholder|length > 0 %} placeholder="{{ settings.placeholder }}"{% endif %}{% if settings.initial_rows and settings.multiline %} rows="{{ settings.initial_rows }}"{% endif %}{{ required?' required':'' }}>{{ input_old('field.' ~ handle, value) }}</textarea>
+	{% else %}
+		<input class="form-control" type="text" id="{{ name }}" name="{{ name }}" value="{{ input_old('field.' ~ handle, value) }}"{% if settings.placeholder and settings.placeholder|length > 0 %} placeholder="{{ settings.placeholder }}"{% endif %}{{ required?' required':'' }}>
+	{% endif %}
+	{% if errors.has('field.' ~ handle) %}
+	<div class="form-control-feedback">{{ errors.first('field.' ~ handle) }}</div>
+	{% endif %}
+	{% if help is not empty %}
+	<small class="text-muted">{{ help }}</small>
+	{% endif %}
+</fieldset>

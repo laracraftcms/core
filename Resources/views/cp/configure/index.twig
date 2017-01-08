@@ -1,0 +1,11 @@
+{% extends 'core::layouts/cp' %}
+
+{% block main %}
+    <ul class="nav nav-pills nav-stacked">
+        <li class="nav-item"><a class="nav-link" href="{{ route('laracraft.configure.section.index') }}">{{ ('core::routes.'~ config('laracraft-core.cp_root')~'.configure.section.index.menu')|trans }}</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('laracraft.configure.entry_type.index') }}">{{ ('core::routes.'~ config('laracraft-core.cp_root')~'.configure.entry_type.index.menu')|trans }}</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ route('laracraft.configure.field_layout.index') }}">{{ ('core::routes.'~ config('laracraft-core.cp_root')~'.configure.field_layout.index.menu')|trans }}</a></li>
+		<li class="nav-item"><a class="nav-link" href="{{ route('laracraft.configure.field_group.index') }}">{{ ('core::routes.'~ config('laracraft-core.cp_root')~'.configure.field_group.index.menu')|trans }}</a></li>
+		<li class="nav-item"><a class="nav-link" href="{{ route('laracraft.configure.field.index') }}">{{ ('core::routes.'~ config('laracraft-core.cp_root')~'.configure.field.index.menu')|trans }}</a></li>
+	</ul>
+{% endblock %}

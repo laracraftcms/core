@@ -1,0 +1,14 @@
+.sidebar-right{
+    margin-top: 2rem;
+    @include media-breakpoint-up(lg){
+        margin-top: 0;
+    }
+}
+
+.sidebar-left{
+    margin-bottom: 2rem;
+    @include media-breakpoint-up(lg){
+        margin-bottom: 0;
+    }
+}
+

@@ -1,0 +1,32 @@
+.btn-default{
+    @include button-variant(#fff,#fff,#fff);
+}
+
+.dataTable,.table {
+    .btn-group .btn-link {
+        padding: 0;
+        &.dropdown-toggle-split {
+            padding: 0 .5rem;
+        }
+    }
+}
+
+.toggle-plus,
+.toggle-minus{
+    @extend .fa;
+    cursor: pointer;
+}
+
+.toggle-plus{
+    color: $brand-success;
+    &:before {
+        content: $fa-var-plus-circle;
+    }
+}
+
+.toggle-minus{
+    color: $brand-danger;
+    &:before {
+        content: $fa-var-minus-circle;
+    }
+}

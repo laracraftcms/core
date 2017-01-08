@@ -1,0 +1,146 @@
+//BASE OPTIONS
+
+$enable-flex: false;
+$enable-rounded: false;
+$enable-shadows: false;
+$enable-gradients: false;
+$enable-transitions: true;
+$enable-hover-media-query: false;
+
+
+$fonts_dir: '/modules/core/fonts' !default;
+$fa-font-path : $fonts_dir;
+
+//COLOURS
+$brand-primary: #4f2ead;
+$brand-primary-tint: #b4a7d1;
+$brand-primary-bg: #e2dcef;
+
+$brand-secondary: #F5F5F5;
+$brand-dark: #333333;
+
+$brand-success:             #5cb85c;
+$brand-info:                #2d75da;
+$brand-warning:             #bcaa12;
+$brand-danger:              #d9534f;
+
+$border-gray: #E6E6E6;
+
+$gray-dark-trans: rgba(0, 0, 0, 0.8);
+
+$body-color: #171717;
+
+$link-color: lighten($brand-primary, 5%);
+
+$table-border-color: $brand-primary;
+$table-bg-accent: $brand-primary-bg;
+
+$brand-colors: (
+                   primary-tint: $brand-primary-tint,
+                   secondary: $brand-secondary,
+                   primary: $brand-primary,
+                   dark: $brand-dark
+               );
+
+$brand-colors-light: (
+                         primary-tint: $brand-primary-tint,
+                         secondary: $brand-secondary
+                     );
+
+$brand-colors-dark: (
+                        primary: $brand-primary,
+                        dark: $brand-dark,
+                    );
+
+/// Social
+$facebook: #3B5998;
+$linkedin: #0077B5;
+$twitter: #55ACEE;
+$youtube: #CD201F;
+$flickr: #FC329B;
+$rss: #FF6600;
+$tumblr: #35465C;
+$pinterest: #CB2027;
+$instagram: #125688;
+$google-plus: #DC4E41;
+
+$social-networks: (
+                      facebook: $facebook,
+                      linkedin: $linkedin,
+                      twitter: $twitter,
+                      youtube: $youtube,
+                      flickr: $flickr,
+                      rss: $rss,
+                      tumblr: $tumblr,
+                      pinterest: $pinterest,
+                      instagram: $instagram,
+                      google-plus : $google-plus,
+                  );
+
+// TYPOGRAPHY
+
+$font-family-sans-serif: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-serif: "Bitter", Georgia, "Times New Roman", Times, serif;
+$font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;
+$font-family-base: $font-family-sans-serif;
+
+$headings-font-family: $font-family-serif;
+
+$font-family-fa: 'FontAwesome', sans-serif;
+
+$font-size-root: 16px;
+
+$font-size-h1: 2.827rem;
+$font-size-h2: 1.602rem;
+$font-size-h3: 1.266rem;
+$font-size-h4: 1rem;
+$font-size-h5: 1rem;
+$font-size-h6: 1rem;
+
+//BUTTONS
+
+$btn-primary-color: #FFFFFF;
+$btn-primary-bg: $link-color;
+$btn-primary-border: $btn-primary-bg;
+
+$btn-secondary-color: $body-color;
+$btn-secondary-bg: #E6E6E6;
+$btn-secondary-border: #ADADAD;
+
+//BOOTSTRAP FIXES (maybe fixed in later release)
+$border-radius: 0;
+$border-radius-lg: 0;
+$border-radius-sm: 0;
+
+// modals
+$modal-backdrop-opacity: .95;
+
+//popovers
+$popover-box-shadow: 1px 1px 3px #BFBFBF;
+
+
+//alerts
+
+$alert-border-width: 1px;
+
+$alert-bg: #fff;
+
+$alert-success-bg:            $alert-bg;
+$alert-success-text:          $brand-success;
+$alert-success-border:        $brand-success;
+
+$alert-info-bg:               $alert-bg;
+$alert-info-text:             $brand-info;
+$alert-info-border:           $brand-info;
+
+$alert-warning-bg:            $alert-bg;
+$alert-warning-text:          $brand-warning;
+$alert-warning-border:        $brand-warning;
+
+$alert-danger-bg:             $alert-bg;
+$alert-danger-text:           $brand-danger;
+$alert-danger-border:         $brand-danger;
+
+//Breadcrumbs
+$breadcrumb-bg:  none;
+

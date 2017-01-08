@@ -12,4 +12,10 @@
 |
 */
 
+$config = app('config')->get('laracraft-core', []);
+
+app('config')->set('laracraft-core', array_merge(require __DIR__ . '/Config/laracraft-core.php', $config));
+
+define('CP_ROOT', config('laracraft-core.cp_root','laracraft'));
+define('CP_COFIGURE', CP_ROOT  . '.configure');
 require __DIR__ . '/Http/routes.php';

@@ -1,0 +1,32 @@
+{% extends 'core::layouts/base' %}
+
+{% block header %}
+    {% block header_topnav %}
+        {% include 'core::cp/components/header/topnav' %}
+    {% endblock %}
+
+
+
+    {% block header_pageheader %}
+	<header class="page-header-panel">
+		<div class="container">
+			{% block header_breadcrumb %}
+				{% include 'core::cp/components/header/breadcrumb' %}
+			{% endblock %}
+			<h1 class="page-header">{% block header_pageheader_title %}{{ page.title ? page.title : ('core::routes.' ~ Route.currentRouteName ~ '.title')|trans }}{% endblock %}</h1>
+
+			{% block header_pagennav %}{% endblock %}
+		</div>
+	</header>
+    {% endblock %}
+
+    {% block header_alerts %}
+        {% include 'core::cp/components/header/alerts' %}
+    {% endblock %}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% block main %}{% endblock %}
+    </div>
+{% endblock %}

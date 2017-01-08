@@ -1,0 +1,45 @@
+{% extends 'core::layouts.cp' %}
+
+{% block header_pagennav %}
+	<nav class="navbar navbar-light">
+		<ul class="nav navbar-nav float-xs-right">
+			<li class="nav-item">
+				<a href="{{ route(config('laracraft-core.cp_root')~'.configure.field_group.create') }}" class="btn btn-success">{{ 'core::entity.field_group.create'|trans }}</a>
+			</li>
+		</ul>
+	</nav>
+{% endblock %}
+
+{% block main %}
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>{{ 'core::entity.field_group.fields.name.heading'|trans }}</th>
+                <th>{{ 'core::entity.field_group.fields.table_name.heading'|trans }}</th>
+				<th>{{ 'core::entity.field.count'|trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+		{% if field_groups|length == 0 %}
+			<tr class="empty_row">
+				<td colspan="3" class="empty text-xs-center">{{ 'core::entity.field_group.empty'|trans }}</td>
+			</tr>
+		{% else %}
+            {% for field_group in field_groups %}
+                <tr>
+                    <td>
+                    {% if not field_group.isLocked() %}
+                        <a href="{{ route(config('laracraft-core.cp_root')~'.configure.field_group.edit',field_group) }}">{{ field_group.name }}</a>
+                    {% else %}
+                        {{ field_group.name }} <span class="label label-pill label-warning">{{ trans('core::forms.locked',{'name':field_group.editLock.createdBy}) }}</span>
+                    {% endif %}
+                    </td>
+                    <td>{{ field_group.table_name }}_content</td>
+                    <td>{{ field_group.fieldCount }}</td>
+                </tr>
+            {% endfor %}
+		{% endif %}
+        </tbody>
+    </table>
+{% endblock %}

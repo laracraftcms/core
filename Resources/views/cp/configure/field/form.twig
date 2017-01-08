@@ -1,0 +1,60 @@
+{% extends 'core::layouts.cp' %}
+
+{% block main %}
+<form method="POST" action="{{ route(config('laracraft-core.cp_root')~'.configure.field.' ~ (field.exists ? 'update' : 'store'), field) }}">
+
+	<fieldset class="form-group">
+		<label for="field_group_id" class="required">{{ 'core::entity.field.fields.field_group.label'|trans }}</label>
+		<select id="field_group_id" name="field_group_id" class="form-control custom-select" required>
+			{% for group in field_groups %}
+			<option value="{{ group.id }}"{{ input_old('field_group_id',field.field_group_id) == group.id ? ' selected="selected"' : '' }}>{{ group.name }}</option>
+			{% endfor %}
+		</select>
+		<small class="text-muted">{{ 'core::entity.field.fields.field_group.help'|trans }}</small>
+	</fieldset>
+	<fieldset class="form-group">
+		<label for="name" class="required">{{ 'core::entity.field.fields.name.label'|trans }}</label>
+		<input id="name" type="text" name="name" class="form-control" value="{{ input_old('name',field.name) }}" required>
+		<small class="text-muted">{{ 'core::entity.field.fields.name.help'|trans }}</small>
+	</fieldset>
+	<fieldset class="form-group">
+		<label for="handle" class="required">{{ 'core::entity.field.fields.handle.label'|trans }}</label>
+		<input id="handle" type="text" name="handle" class="form-control" value="{{ input_old('handle',field.handle) }}" required>
+		<small class="text-muted">{{ 'core::entity.field.fields.handle.help'|trans }}</small>
+	</fieldset>
+	<fieldset class="form-group">
+		<label for="help">{{ 'core::entity.field.fields.help.label'|trans }}</label>
+		<input id="help" type="text" name="help" class="form-control" value="{{ input_old('help', field.help) }}">
+		<small class="text-muted">{{ 'core::entity.field.fields.help.help'|trans }}</small>
+	</fieldset>
+	<fieldset class="form-group">
+		<label for="type" class="required">{{ 'core::entity.field.fields.type.label'|trans }}</label>
+		<select id="type" name="type" class="form-control custom-select" required>
+			{% for type, name in field.getTypes() %}
+				<option value="{{ type }}"{{ input_old('type',field.type) == type ? ' selected="selected"' : '' }}>{{ name }}</option>
+			{% endfor %}
+		</select>
+		<small class="text-muted">{{ 'core::entity.field.fields.type.help'|trans }}</small>
+	</fieldset>
+	<div id="fieldSettings">
+		{{ field.getSettingsHtml(field)|raw }}
+	</div>
+   <fieldset>
+	   <input type="hidden" id="exists" value="{{ field.exists ? '1' : '' }}" disabled>
+	   <input type="hidden" id="fieldRouteKey" value="{{ field.exists ? field[field.getRouteKeyName()] : '' }}" disabled>
+       <input type="hidden" name="_method" value="{{ field.exists ? 'PATCH' : 'POST'}}">
+       <input type="hidden" name="_token" value="{{ csrf_token() }}">
+       <a href="{{ route(config('laracraft-core.cp_root')~'.configure.field.index')~"?and_release="~field.editLock.id }}" class="btn btn-secondary">{{ 'core::forms.cancel'|trans }}</a>
+
+	   <div class="btn-group pull-right">
+		   <input type="submit" class="btn btn-primary" value="{{ ('core::forms.' ~ (field.exists ? 'update' : 'save'))|trans }}">
+		   <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			   <span class="sr-only">{{ ('core::forms.' ~ (field.exists ? 'update' : 'save')~'_options')|trans }}</span>
+		   </button>
+		   <div class="dropdown-menu dropdown-menu-right">
+			   <input type="submit" class="dropdown-item" name="and_edit" value="{{ ('core::forms.' ~ (field.exists ? 'update' : 'save')~'_and_edit')|trans }}">
+		   </div>
+	   </div>
+   </fieldset>
+</form>
+{% endblock %}

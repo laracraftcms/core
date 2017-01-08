@@ -1,0 +1,12 @@
+{% extends 'core::cp.configure.entry_type.form' %}
+
+{% block sidebar_after %}
+    {% if entry_type.sections|length > 0 %}
+    <h3>{{ 'core::forms.used_by'|trans }}:</h3>
+    <div class="list-group">
+        {% for section in entry_type.sections %}
+            <a class="list-group-item" href="{{ route(config('laracraft-core.cp_root')~'.configure.section.edit',section) }}">{{ section.name }}<span class="tag tag-pill tag-default pull-right text-uppercase">{{ trans('core::entity.section.types.'~section.type) }}</span></a>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endblock %}

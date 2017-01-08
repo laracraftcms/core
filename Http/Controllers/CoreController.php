@@ -4,7 +4,9 @@ namespace Laracraft\Core\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use Laracraft\Core\Entities\Helpers\UrlFormatter;
+use Laracraft\Core\Entities\Url;
+use Laracraft\Core\Repositories\Contracts\UrlRepositoryContract;
 
 class CoreController extends Controller
 {
@@ -14,50 +16,35 @@ class CoreController extends Controller
      */
     public function index()
     {
-        return view('core::index');
+        return view('core::cp.dashboard');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Response
-     */
-    public function create()
-    {
-        return view('core::create');
-    }
+	/**
+	 * Display a listing of the resource.
+	 * @return Response
+	 */
+	public function configure()
+	{
+		return view('core::cp.configure.index');
+	}
 
-    /**
-     * Store a newly created resource in storage.
-     * @param  Request $request
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-    }
+	public function route($url, UrlRepositoryContract $url_repository){
 
-    /**
-     * Show the form for editing the specified resource.
-     * @return Response
-     */
-    public function edit()
-    {
-        return view('core::edit');
-    }
+		\Debugbar::startMeasure('core:route');
+		if($url !== '/'){
+			$url  = '/'.$url;
+		}
+		$hash = md5($url);
+		$url = $url_repository->tags(['url:'.$hash])->findOrFailByField('hash',$hash);
+		$routables = config('laracraft-core.routable',[]);
+		if(array_key_exists($url->routable_type,$routables)){
+			list($class, $method) = explode('@', $routables[$url->routable_type]);
+			\Debugbar::stopMeasure('core:route');
+			return call_user_func(array( app($class) , $method ), $url->routable);
+		}else{
+			abort(404);
+		}
+		return false;
+	}
 
-    /**
-     * Update the specified resource in storage.
-     * @param  Request $request
-     * @return Response
-     */
-    public function update(Request $request)
-    {
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @return Response
-     */
-    public function destroy()
-    {
-    }
 }

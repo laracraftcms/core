@@ -7,6 +7,22 @@
             "email": "greg@greghaddow.co.uk"
         }
     ],
+    "repositories": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/rafis/schema-extended"
+        }
+    ],
+    "require":{
+      "rcrowe/twigbridge": "^0.9.3",
+      "lord/laroute" : "2.*",
+      "yajra/laravel-datatables-oracle": "~6.0",
+      "jeremeamia/superclosure": "^2.2",
+      "laracraftcms/breadcrumbs": "dev-master",
+      "alsofronie/eloquent-uuid": "dev-master",
+      "doctrine/dbal": "^2.5",
+      "cviebrock/eloquent-sluggable": "^4.1"
+    },
     "autoload": {
         "psr-4": {
             "Laracraft\\Core\\": ""

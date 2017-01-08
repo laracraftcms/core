@@ -1,0 +1,64 @@
+{% extends 'core::layouts.cp' %}
+{% set _sidebar_after = block('sidebar_after') %}
+{% block body %}
+    <form method="POST" action="{{ route(config('laracraft-core.cp_root')~'.configure.entry_type.' ~ (entry_type.exists ? 'update' : 'store'), entry_type) }}">
+    {% embed 'core::layouts.partials.sidebar-right' %}
+        {% block main %}
+        <fieldset class="form-group">
+           <label for="name" class="required">{{ 'core::entity.entry_type.fields.name.label'|trans }}</label>
+           <input id="name" type="text" name="name" class="form-control" value="{{ input_old('name',entry_type.name) }}" required>
+           <small class="text-muted">{{ 'core::entity.entry_type.fields.name.help'|trans }}</small>
+       </fieldset>
+       <fieldset class="form-group">
+           <label for="handle" class="required">{{ 'core::entity.entry_type.fields.handle.label'|trans }}</label>
+           <input id="handle" type="text" name="handle" class="form-control" value="{{ input_old('handle',entry_type.handle) }}" required>
+           <small class="text-muted">{{ 'core::entity.entry_type.fields.handle.help'|trans }}</small>
+       </fieldset>
+       <fieldset class="form-group">
+           <label for="has_title_field" class="custom-control custom-checkbox">
+               <input type="hidden" name="has_title_field" value="0">
+               <input id="has_title_field" class="custom-control-input" type="checkbox" name="has_title_field" value="1"{{ input_old('has_title_field',entry_type.has_title_field)==true ? ' checked="checked"' : '' }}>
+               <span class="custom-control-indicator"></span>
+			   <span class="custom-control-description">{{ 'core::entity.entry_type.fields.has_title_field.help'|trans }}</span>
+           </label>
+       </fieldset>
+       <fieldset class="form-group">
+           <label for="title_config" class="has_title_field_on"{{ input_old('has_title_field',entry_type.has_title_field)==false ? ' hidden' : '' }}>{{ 'core::entity.entry_type.fields.title_config.label.true'|trans }}</label>
+           <label for="title_config" class="has_title_field_off"{{ input_old('has_title_field',entry_type.has_title_field)==true ? ' hidden' : '' }}>{{ 'core::entity.entry_type.fields.title_config.label.false'|trans }}</label>
+           <input id="title_config" type="text" name="title_config" class="form-control" value="{{ input_old('title_config',entry_type.title_config) }}">
+           <small class="text-muted has_title_field_on"{{ input_old('has_title_field',entry_type.has_title_field)==false ? ' hidden' : '' }}>{{ 'core::entity.entry_type.fields.title_config.help.true'|trans }}</small>
+           <small class="text-muted has_title_field_off"{{ input_old('has_title_field',entry_type.has_title_field)==true ? ' hidden' : '' }}>{{ 'core::entity.entry_type.fields.title_config.help.false'|trans }}</small>
+       </fieldset>
+       <fieldset class="form-group">
+           <label for="field_layout_id">{{ 'core::entity.entry_type.fields.field_layout.label'|trans }}</label>
+           <select id="field_layout_id" name="field_layout_id" class="form-control custom-select" required>
+               <option value="">{{ 'core::entity.entry_type.fields.field_layout.placeholder'|trans }}</option>
+               {% for field_layout in field_layouts %}
+                   <option value="{{ field_layout.id }}"{{ field_layout.id == input_old('field_layout_id',entry_type.field_layout_id) ? ' selected' : '' }}>{{ field_layout.name }}</option>
+               {% endfor %}
+           </select>
+           <small class="text-muted">{{ 'core::entity.entry_type.fields.field_layout.help'|trans }}</small>
+       </fieldset>
+       <fieldset >
+           <input type="hidden" name="_method" value="{{ entry_type.exists ? 'PATCH' : 'POST'}}">
+           <input type="hidden" name="_token" value="{{ csrf_token() }}">
+           <a href="{{ route(config('laracraft-core.cp_root')~'.configure.entry_type.index')~"?and_release="~entry_type.editLock.id }}" class="btn btn-secondary">{{ 'core::forms.cancel'|trans }}</a>
+
+		   <div class="btn-group pull-right">
+			   <input type="submit" class="btn btn-primary" value="{{ ('core::forms.' ~ (entry_type.exists ? 'update' : 'save'))|trans }}">
+			   <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				   <span class="sr-only">{{ ('core::forms.' ~ (entry_type.exists ? 'update' : 'save')~'_options')|trans }}</span>
+			   </button>
+			   <div class="dropdown-menu dropdown-menu-right">
+				   <input type="submit" class="dropdown-item" name="and_edit" value="{{ ('core::forms.' ~ (entry_type.exists ? 'update' : 'save')~'_and_edit')|trans }}">
+			   </div>
+		   </div>
+       </fieldset>
+        {% endblock %}
+        {% block sidebar %}
+        {{ _sidebar_after|raw }}
+        {% endblock %}
+    {% endembed %}
+    </form>
+{% endblock %}
+

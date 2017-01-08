@@ -6,10 +6,21 @@
     "active": 1,
     "order": 0,
     "providers": [
-        "Laracraft\\Core\\Providers\\CoreServiceProvider"
+        "Laracraft\\Core\\Providers\\CoreServiceProvider",
+        "TwigBridge\\ServiceProvider",
+        "Lord\\Laroute\\LarouteServiceProvider",
+        "Yajra\\Datatables\\DatatablesServiceProvider",
+        "Cviebrock\\EloquentSluggable\\ServiceProvider"
     ],
-    "aliases":{},
+    "aliases":{
+        "Script" : "Laracraft\\Core\\Http\\Helpers\\Assets\\Facades\\Script",
+        "Style" : "Laracraft\\Core\\Http\\Helpers\\Assets\\Facades\\Style",
+        "Twig" : "TwigBridge\\Facade\\Twig"
+    },
     "files": [
-        "start.php"
+        "start.php",
+        "utilities.php",
+        "view_composers.php",
+        "breadcrumbs.php"
     ]
 }

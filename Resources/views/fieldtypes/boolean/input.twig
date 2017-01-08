@@ -1,0 +1,14 @@
+<fieldset class="form-group{{ errors.has('field.' ~ handle) ? ' has-danger' : '' }}">
+	<input type="hidden" name="{{ name }}" value="0">
+	<label class="form-control-label" for="{{ name }}">{{ label }}</label>
+	<br>
+	<input name="{{ name }}" id="{{ name }}" type="checkbox" data-toggle="toggle" value="1" {{ input_old('field.' ~ handle, (exists ? value : settings.default)) == true ? 'checked="checked"' : '' }}>
+	<div class="clearfix">
+		{% if errors.has('field.' ~ handle) %}
+			<div class="form-control-feedback">{{ errors.first('field.' ~ handle) }}</div>
+		{% endif %}
+		{% if help is not empty %}
+			<small class="text-muted">{{ help }}</small>
+		{% endif %}
+	</div>
+</fieldset>

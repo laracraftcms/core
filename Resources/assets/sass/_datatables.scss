@@ -1,0 +1,94 @@
+@import "../../../node_modules/datatables.net-src/css/dataTables.bootstrap4";
+
+table.dataTable {
+    border-collapse: collapse !important;
+
+    thead {
+
+        th {
+            position:         relative;
+            background-image: none !important; /* Remove the DataTables bootstrap integration styling */
+
+            &.sorting,
+            &.sorting_asc,
+            &.sorting_desc{
+                &:before {
+                    font-family: $font-family-fa;
+                }
+                &:after {
+                    display: none;
+                }
+            }
+
+
+            &.sorting:before {
+                content: "\f0dc";
+            }
+
+            &.sorting_asc:before {
+                opacity: 1;
+                content: "\f0de";
+            }
+            &.sorting_desc:before {
+                opacity: 1;
+                content: "\f0dd";
+            }
+
+            &.sorting_asc_disabled:before,
+            &.sorting_desc_disabled:before {
+                opacity: 0;
+            }
+        }
+    }
+}
+
+div.dataTables_scrollBody table.dataTable thead th {
+    &.sorting:after,
+    &.sorting_asc:after,
+    &.sorting_desc:after {
+        content: "";
+    }
+}
+
+div.dataTables_paginate a.paginate_button {
+
+    padding: 0.5rem;
+    cursor: pointer;
+
+    &.first,
+    &.previous {
+        position:     relative;
+        padding-left: 24px;
+        &:before {
+            padding-right:        8px;
+            display:     inline-block;
+            font-family: $font-family-fa;
+        }
+    }
+    &.next,
+    &.last {
+        position: relative;
+        padding-right: 24px;
+        &:after {
+            padding-left: 8px;
+            display: inline-block;
+            font-family: $font-family-fa;
+        }
+    }
+
+    &.first:before {
+        content: "\f100";
+    }
+
+    &.previous:before {
+        content: "\f104";
+    }
+
+    &.next:after {
+        content: "\f105";
+    }
+
+    &.last:after {
+        content: "\f101";
+    }
+}
